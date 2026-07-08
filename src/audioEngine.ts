@@ -185,6 +185,217 @@ export class AudioEngine {
       this.activeSource = osc;
     } else if (type === 'synth_arpeggio') {
       this.startArpeggiator();
+    } else if (type === 'sea_waves') {
+      // Synthesize rolling ocean waves using low-pass filtered pink noise modulated by a very slow LFO
+      const noiseSource = this.ctx.createBufferSource();
+      noiseSource.buffer = this.buffers['pink_noise'] || this.buffers['white_noise'];
+      noiseSource.loop = true;
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(320, this.ctx.currentTime);
+
+      const waveGain = this.ctx.createGain();
+      waveGain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+
+      noiseSource.connect(filter);
+      filter.connect(waveGain);
+      waveGain.connect(this.panner);
+
+      // Create a slow LFO to simulate waves coming in and out (approx 8 seconds period)
+      const lfo = this.ctx.createOscillator();
+      lfo.frequency.setValueAtTime(0.12, this.ctx.currentTime);
+
+      const lfoGainFilter = this.ctx.createGain();
+      lfoGainFilter.gain.setValueAtTime(220, this.ctx.currentTime); // Modulate frequency by +/- 220Hz
+
+      const lfoGainVolume = this.ctx.createGain();
+      lfoGainVolume.gain.setValueAtTime(0.12, this.ctx.currentTime); // Modulate volume
+
+      lfo.connect(lfoGainFilter);
+      lfoGainFilter.connect(filter.frequency);
+
+      lfo.connect(lfoGainVolume);
+      lfoGainVolume.connect(waveGain.gain);
+
+      noiseSource.start(0);
+      lfo.start(0);
+
+      this.activeSource = noiseSource;
+      // Track secondary active nodes for cleanup
+      this.synthNodes.push({ oscs: [lfo], gain: waveGain });
+
+    } else if (type === 'forest_birds') {
+      // Gentle wind chimes and warm bird sweeps
+      const scheduler = () => {
+        if (!this.ctx || !this.panner) return;
+        const now = this.ctx.currentTime;
+
+        // Randomly decide to play a chime (wind chime sound) or a chirp (bird)
+        if (Math.random() > 0.4) {
+          // Play a sweet wind chime
+          const chimeOsc = this.ctx.createOscillator();
+          const chimeGain = this.ctx.createGain();
+          
+          chimeOsc.type = 'sine';
+          const notes = [587.33, 659.25, 783.99, 880.00, 987.77, 1174.66];
+          const freq = notes[Math.floor(Math.random() * notes.length)];
+          chimeOsc.frequency.setValueAtTime(freq, now);
+
+          chimeGain.gain.setValueAtTime(0, now);
+          chimeGain.gain.linearRampToValueAtTime(0.12, now + 0.01);
+          chimeGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
+
+          chimeOsc.connect(chimeGain);
+          chimeGain.connect(this.panner);
+          chimeOsc.start(now);
+          chimeOsc.stop(now + 1.3);
+
+          const nodeRef = { oscs: [chimeOsc], gain: chimeGain };
+          this.synthNodes.push(nodeRef);
+          setTimeout(() => {
+            if (this.ctx) {
+              this.synthNodes = this.synthNodes.filter((n) => n !== nodeRef);
+            }
+          }, 1500);
+        } else {
+          // Play a gentle forest bird chirp
+          const chirpOsc = this.ctx.createOscillator();
+          const chirpGain = this.ctx.createGain();
+
+          chirpOsc.type = 'sine';
+          const startFreq = 1800 + Math.random() * 600;
+          chirpOsc.frequency.setValueAtTime(startFreq, now);
+          chirpOsc.frequency.exponentialRampToValueAtTime(startFreq + 500, now + 0.05);
+          chirpOsc.frequency.exponentialRampToValueAtTime(startFreq - 300, now + 0.12);
+
+          chirpGain.gain.setValueAtTime(0, now);
+          chirpGain.gain.linearRampToValueAtTime(0.06, now + 0.005);
+          chirpGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.15);
+
+          chirpOsc.connect(chirpGain);
+          chirpGain.connect(this.panner);
+          chirpOsc.start(now);
+          chirpOsc.stop(now + 0.2);
+
+          const nodeRef = { oscs: [chirpOsc], gain: chirpGain };
+          this.synthNodes.push(nodeRef);
+          setTimeout(() => {
+            if (this.ctx) {
+              this.synthNodes = this.synthNodes.filter((n) => n !== nodeRef);
+            }
+          }, 300);
+        }
+      };
+
+      scheduler();
+      this.arpeggioTimer = window.setInterval(scheduler, 400);
+
+    } else if (type === 'bowl_gong') {
+      // 4 oscillators slightly detuned to create that rich, vibrating singing bowl sound
+      const freqs = [180, 360.5, 541, 811.5];
+      const gains = [0.35, 0.18, 0.08, 0.04];
+      const bowlGain = this.ctx.createGain();
+      bowlGain.gain.setValueAtTime(0.4, this.ctx.currentTime);
+      bowlGain.connect(this.panner);
+
+      const oscs: OscillatorNode[] = [];
+
+      freqs.forEach((f, idx) => {
+        const osc = this.ctx!.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(f, this.ctx!.currentTime);
+        
+        // Subtle slow vibrato for each oscillator to mimic a hand-rubbed bowl
+        const vibrato = this.ctx!.createOscillator();
+        vibrato.frequency.setValueAtTime(0.22 + idx * 0.04, this.ctx!.currentTime);
+        const vibratoGain = this.ctx!.createGain();
+        vibratoGain.gain.setValueAtTime(1.8, this.ctx!.currentTime);
+        
+        vibrato.connect(vibratoGain);
+        vibratoGain.connect(osc.frequency);
+        vibrato.start();
+        
+        const oscGain = this.ctx!.createGain();
+        oscGain.gain.setValueAtTime(gains[idx], this.ctx!.currentTime);
+        
+        osc.connect(oscGain);
+        oscGain.connect(bowlGain);
+        osc.start();
+        
+        oscs.push(osc);
+        oscs.push(vibrato);
+      });
+
+      this.activeSource = oscs[0];
+      this.synthNodes.push({ oscs: oscs.slice(1), gain: bowlGain });
+
+    } else if (type === 'heartbeat_sba') {
+      const scheduler = () => {
+        if (!this.ctx || !this.panner) return;
+        const now = this.ctx.currentTime;
+
+        const triggerBeat = (delay: number, intensity: number) => {
+          const time = now + delay;
+          const osc = this.ctx!.createOscillator();
+          const gain = this.ctx!.createGain();
+
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(90, time);
+          osc.frequency.exponentialRampToValueAtTime(25, time + 0.12);
+
+          gain.gain.setValueAtTime(0, time);
+          gain.gain.linearRampToValueAtTime(intensity, time + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.18);
+
+          osc.connect(gain);
+          gain.connect(this.panner!);
+          osc.start(time);
+          osc.stop(time + 0.25);
+
+          const nodeRef = { oscs: [osc], gain };
+          this.synthNodes.push(nodeRef);
+          setTimeout(() => {
+            if (this.ctx) {
+              this.synthNodes = this.synthNodes.filter((n) => n !== nodeRef);
+            }
+          }, 300);
+        };
+
+        triggerBeat(0, 0.45);
+        triggerBeat(0.16, 0.35);
+      };
+
+      scheduler();
+      this.arpeggioTimer = window.setInterval(scheduler, 1000);
+
+    } else if (type === 'binaural_beat') {
+      const osc1 = this.ctx.createOscillator();
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(528, this.ctx.currentTime); // 528 Hz Solfeggio
+
+      const osc2 = this.ctx.createOscillator();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(264, this.ctx.currentTime); // 264 Hz sub-octave
+
+      const osc3 = this.ctx.createOscillator();
+      osc3.type = 'sine';
+      osc3.frequency.setValueAtTime(132, this.ctx.currentTime); // 132 Hz deep anchor
+
+      const padGain = this.ctx.createGain();
+      padGain.gain.setValueAtTime(0.25, this.ctx.currentTime);
+
+      osc1.connect(padGain);
+      osc2.connect(padGain);
+      osc3.connect(padGain);
+      padGain.connect(this.panner);
+
+      osc1.start();
+      osc2.start();
+      osc3.start();
+
+      this.activeSource = osc1;
+      this.synthNodes.push({ oscs: [osc2, osc3], gain: padGain });
     }
   }
 

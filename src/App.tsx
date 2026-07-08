@@ -154,15 +154,15 @@ export default function App() {
           }
 
           case 'up_down':
-            // Pure vertical oscillation on Y axis, centered on the listener
+            // Ample vertical oscillation (Haut-Bas) on both the visual Z-axis and elevation Y-axis
             nextX = 0;
-            nextZ = 0; // Centered
-            nextY = 4.8 * Math.sin(thetaRef.current);
+            nextZ = 4.9 * Math.sin(thetaRef.current); // Extremely ample front-to-back visual oscillation
+            nextY = 4.9 * Math.sin(thetaRef.current); // Extremely ample elevation height oscillation for HRTF 3D space
             break;
 
           case 'left_right':
-            // Back-and-forth linear movement on X axis, centered on the listener
-            nextX = R * Math.sin(thetaRef.current);
+            // Back-and-forth linear movement on X axis (Gauche-Droite), centered on the listener with full width amplitude
+            nextX = 4.9 * Math.sin(thetaRef.current);
             nextZ = 0; // Centered
             // Height Y remains at its manual elevation value (prev.y)
             break;

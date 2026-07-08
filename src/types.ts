@@ -1,4 +1,4 @@
-export type SoundType = 'pink_noise' | 'white_noise' | 'synth_arpeggio' | 'organic_rain' | 'sine_wave';
+export type SoundType = 'pink_noise' | 'white_noise' | 'synth_arpeggio' | 'organic_rain' | 'sine_wave' | 'sea_waves' | 'forest_birds' | 'bowl_gong' | 'heartbeat_sba' | 'binaural_beat';
 
 export type TrajectoryType = 'circle' | 'infinity' | 'up_down' | 'left_right';
 
