@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { SoundPosition, SoundType, TrajectoryType } from './types';
 import { AudioEngine } from './audioEngine';
 import { AcousticScene } from './components/AcousticScene';
-import { AudioControls } from './components/AudioControls';
+import { AudioControls, SoundPickerCard } from './components/AudioControls';
 import { Sun, Moon, Info, HelpCircle, Disc, Headphones, VolumeX, Volume2, ShieldCheck } from 'lucide-react';
 
 export default function App() {
@@ -262,11 +262,11 @@ export default function App() {
       </header>
 
       {/* Main Body Grid */}
-      <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 z-10 flex flex-col gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           
           {/* Left Column: Sonar view */}
-          <div className="lg:col-span-7 flex flex-col gap-6">
+          <div className="flex flex-col gap-6">
             <AcousticScene
               position={position}
               onChangePosition={setPosition}
@@ -277,14 +277,12 @@ export default function App() {
           </div>
 
           {/* Right Column: Audio Playback, Wave Signal, Autopilot */}
-          <div className="lg:col-span-5">
+          <div>
             <AudioControls
               volume={volume}
               onChangeVolume={setVolume}
               isPlaying={isPlaying}
               onTogglePlay={() => setIsPlaying((prev) => !prev)}
-              activeSound={activeSound}
-              onChangeSound={setActiveSound}
               isAutopilot={isAutopilot}
               onToggleAutopilot={() => setIsAutopilot((prev) => !prev)}
               activeTrajectory={activeTrajectory}
@@ -294,6 +292,14 @@ export default function App() {
             />
           </div>
 
+        </div>
+
+        {/* Sound Picker: at the end, all the way at the bottom */}
+        <div className="w-full">
+          <SoundPickerCard
+            activeSound={activeSound}
+            onChangeSound={setActiveSound}
+          />
         </div>
       </main>
 

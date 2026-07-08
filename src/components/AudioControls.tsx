@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { SoundType, TrajectoryType, SoundOption, TrajectoryOption } from '../types';
-import { Play, Square, Volume2, Music, Shuffle, Orbit, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
+import { Play, Square, Volume2, Music, Orbit, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface AudioControlsProps {
   volume: number;
   onChangeVolume: (vol: number) => void;
   isPlaying: boolean;
   onTogglePlay: () => void;
-  activeSound: SoundType;
-  onChangeSound: (type: SoundType) => void;
   isAutopilot: boolean;
   onToggleAutopilot: () => void;
   activeTrajectory: TrajectoryType;
@@ -22,8 +20,6 @@ export const AudioControls: React.FC<AudioControlsProps> = ({
   onChangeVolume,
   isPlaying,
   onTogglePlay,
-  activeSound,
-  onChangeSound,
   isAutopilot,
   onToggleAutopilot,
   activeTrajectory,
@@ -31,80 +27,6 @@ export const AudioControls: React.FC<AudioControlsProps> = ({
   orbitSpeed,
   onChangeOrbitSpeed,
 }) => {
-  const [isSoundPickerExpanded, setIsSoundPickerExpanded] = useState(true);
-  const soundOptions: SoundOption[] = [
-    {
-      id: 'organic_rain',
-      name: 'Averse Apaisante (SBA)',
-      englishName: 'Soothing Rain Wash',
-      description: 'Stimulation Bilatérale Alternée naturelle et relaxante. Idéal pour apaiser l\'anxiété pendant la reconsolidation de la mémoire.',
-      isIdeal: true,
-    },
-    {
-      id: 'forest_birds',
-      name: 'Forêt & Carillons',
-      englishName: 'Mindful Chimes & Birds',
-      description: 'Ambiance de nature sauvage mêlant carillons cristallins et gazouillis légers pour un ancrage cognitif positif et serein.',
-      isIdeal: true,
-    },
-    {
-      id: 'bowl_gong',
-      name: 'Bol Tibétain Vibratoire',
-      englishName: 'Vibrating Tibetan Bowl',
-      description: 'Harmoniques riches et detunées créant un bourdonnement enveloppant pour une résonance cérébrale harmonisante.',
-      isIdeal: true,
-    },
-    {
-      id: 'heartbeat_sba',
-      name: 'Battement de Cœur Sécurisant',
-      englishName: 'Grounding Heartbeat',
-      description: 'Le rythme rassurant d\'un cœur à 60 BPM. Idéal pour réduire les états d\'alerte et d\'hyperactivation nerveuse.',
-      isIdeal: true,
-    },
-    {
-      id: 'binaural_beat',
-      name: 'Fréquence Sacrée 528 Hz',
-      englishName: 'Solfeggio Healing 528Hz',
-      description: 'Une fréquence pure résonant avec des harmoniques de soutien physique et mental, propice à la relaxation profonde.',
-      isIdeal: true,
-    },
-    {
-      id: 'handpan_sba',
-      name: 'Handpan Méditatif (SBA)',
-      englishName: 'Meditative Handpan',
-      description: 'Notes de métal sculpté douces et envoûtantes. Offre des harmoniques parfaites pour une double attention fluide et agréable.',
-      isIdeal: true,
-    },
-    {
-      id: 'hang_drum_sba',
-      name: 'Hang Drum Profond (SBA)',
-      englishName: 'Deep Hang Drum',
-      description: 'Sons de cupole chauds et profonds avec une résonance de basse apaisante, ralentissant naturellement le rythme cardiaque.',
-      isIdeal: true,
-    },
-    {
-      id: 'tongue_drum_sba',
-      name: 'Tongue Drum Céleste (SBA)',
-      englishName: 'Celestial Tongue Drum',
-      description: 'Pulsations cristallines et pures de cloches de bois et d\'acier. Extrêmement faciles à suivre mentalement de gauche à droite.',
-      isIdeal: true,
-    },
-    {
-      id: 'bol_tibetan_premium',
-      name: 'Bol Tibétain Martelé (Maillet)',
-      englishName: 'Struck Tibetan Singing Bowl',
-      description: 'Frappe lente au maillet de feutre suivie d\'une vibration ondulatoire riche et sacrée. Idéal pour la désensibilisation lente.',
-      isIdeal: true,
-    },
-    {
-      id: 'kalimba_sba',
-      name: 'Kalimba Féerique (SBA)',
-      englishName: 'Dreamy Kalimba',
-      description: 'Tines métalliques douces pincées sur caisse boisée. Procure un sentiment d\'ancrage d\'enfance sécurisant.',
-      isIdeal: true,
-    },
-  ];
-
   const trajectoryOptions: TrajectoryOption[] = [
     {
       id: 'circle',
@@ -219,11 +141,6 @@ export const AudioControls: React.FC<AudioControlsProps> = ({
             />
           </div>
 
-          {/* Helpful context */}
-          <div className="mt-4 p-2.5 rounded-xl bg-sky-500/10 dark:bg-sky-500/5 border border-sky-500/20 text-[10px] text-sky-700 dark:text-sky-300 leading-relaxed font-sans">
-            L'orbite fait naviguer le signal de manière continue autour de votre tête. Mettez vos <strong>écouteurs</strong> pour apprécier le réalisme de la rotation binaurale !
-          </div>
-
         </div>
       </div>
 
@@ -280,82 +197,168 @@ export const AudioControls: React.FC<AudioControlsProps> = ({
         </div>
       </div>
 
-      {/* Sound Signal Picker Card */}
-      <div id="sound-picker-card" className="bg-white/40 dark:bg-white/5 backdrop-blur-md rounded-3xl border border-slate-200/40 dark:border-white/10 p-5 shadow-xl transition-all duration-300">
-        <button
-          onClick={() => setIsSoundPickerExpanded(!isSoundPickerExpanded)}
-          className="w-full flex items-center justify-between cursor-pointer focus:outline-none"
-        >
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-500">
-              <Music className="w-4 h-4" />
-            </div>
-            <h3 className="font-display font-semibold text-sm text-slate-800 dark:text-slate-100 uppercase tracking-wider text-left">
-              2. Choix du Signal Sonore
-            </h3>
-          </div>
-          <div className="text-slate-400 dark:text-slate-500">
-            {isSoundPickerExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-          </div>
-        </button>
+    </div>
+  );
+};
 
-        {isSoundPickerExpanded && (
-          <div className="mt-4 flex flex-col gap-2.5 animate-fadeIn">
-            {soundOptions.map((opt) => {
-              const isSelected = activeSound === opt.id;
-              return (
-                <button
-                  key={opt.id}
-                  id={`sound-opt-${opt.id}`}
-                  onClick={() => onChangeSound(opt.id)}
-                  className={`w-full text-left p-3.5 rounded-2xl border transition-all duration-200 group flex items-start justify-between cursor-pointer ${
-                    isSelected
-                      ? 'bg-indigo-500/15 border-indigo-500/40 dark:bg-indigo-500/10 shadow-md'
-                      : 'bg-white/60 hover:bg-slate-100/80 dark:bg-white/5 dark:hover:bg-white/10 border-slate-200/60 dark:border-white/5'
-                  }`}
-                >
-                  <div className="flex-grow pr-4">
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <span className={`text-xs font-semibold tracking-wide ${
-                        isSelected ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'text-slate-700 dark:text-slate-200'
-                      }`}>
-                        {opt.name}
-                      </span>
-                      <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">
-                        ({opt.englishName})
-                      </span>
-                      {opt.isIdeal && (
-                        <span className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/15">
-                          <Sparkles className="w-2.5 h-2.5" /> Idéal
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
-                      {opt.description}
-                    </p>
-                  </div>
+interface SoundPickerCardProps {
+  activeSound: SoundType;
+  onChangeSound: (type: SoundType) => void;
+}
 
-                  {/* Checklist Indicator */}
-                  <div className="shrink-0 pt-0.5">
-                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
-                      isSelected
-                        ? 'border-indigo-500 bg-indigo-500 text-white'
-                        : 'border-slate-300 dark:border-slate-700 group-hover:border-slate-400'
+export const SoundPickerCard: React.FC<SoundPickerCardProps> = ({
+  activeSound,
+  onChangeSound,
+}) => {
+  const [isSoundPickerExpanded, setIsSoundPickerExpanded] = useState(true);
+
+  const soundOptions: SoundOption[] = [
+    {
+      id: 'organic_rain',
+      name: 'Averse Apaisante (SBA)',
+      englishName: 'Soothing Rain Wash',
+      description: 'Stimulation Bilatérale Alternée naturelle et relaxante. Idéal pour apaiser l\'anxiété pendant la reconsolidation de la mémoire.',
+      isIdeal: true,
+    },
+    {
+      id: 'forest_birds',
+      name: 'Forêt & Carillons',
+      englishName: 'Mindful Chimes & Birds',
+      description: 'Ambiance de nature sauvage mêlant carillons cristallins et gazouillis légers pour un ancrage cognitif positif et serein.',
+      isIdeal: true,
+    },
+    {
+      id: 'bowl_gong',
+      name: 'Bol Tibétain Vibratoire',
+      englishName: 'Vibrating Tibetan Bowl',
+      description: 'Harmoniques riches et detunées créant un bourdonnement enveloppant pour une résonance cérébrale harmonisante.',
+      isIdeal: true,
+    },
+    {
+      id: 'heartbeat_sba',
+      name: 'Battement de Cœur Sécurisant',
+      englishName: 'Grounding Heartbeat',
+      description: 'Le rythme rassurant d\'un cœur à 60 BPM. Idéal pour réduire les états d\'alerte et d\'hyperactivation nerveuse.',
+      isIdeal: true,
+    },
+    {
+      id: 'binaural_beat',
+      name: 'Fréquence Sacrée 528 Hz',
+      englishName: 'Solfeggio Healing 528Hz',
+      description: 'Une fréquence pure résonant avec des harmoniques de soutien physique et mental, propice à la relaxation profonde.',
+      isIdeal: true,
+    },
+    {
+      id: 'handpan_sba',
+      name: 'Handpan Méditatif (SBA)',
+      englishName: 'Meditative Handpan',
+      description: 'Notes de métal sculpté douces et envoûtantes. Offre des harmoniques parfaites pour une double attention fluide et agréable.',
+      isIdeal: true,
+    },
+    {
+      id: 'hang_drum_sba',
+      name: 'Hang Drum Profond (SBA)',
+      englishName: 'Deep Hang Drum',
+      description: 'Sons de cupole chauds et profonds avec une résonance de basse apaisante, ralentissant naturellement le rythme cardiaque.',
+      isIdeal: true,
+    },
+    {
+      id: 'tongue_drum_sba',
+      name: 'Tongue Drum Céleste (SBA)',
+      englishName: 'Celestial Tongue Drum',
+      description: 'Pulsations cristallines et pures de cloches de bois et d\'acier. Extrêmement faciles à suivre mentalement de gauche à droite.',
+      isIdeal: true,
+    },
+    {
+      id: 'bol_tibetan_premium',
+      name: 'Bol Tibétain Martelé (Maillet)',
+      englishName: 'Struck Tibetan Singing Bowl',
+      description: 'Frappe lente au maillet de feutre suivie d\'une vibration ondulatoire riche et sacrée. Idéal pour la désensibilisation lente.',
+      isIdeal: true,
+    },
+    {
+      id: 'kalimba_sba',
+      name: 'Kalimba Féerique (SBA)',
+      englishName: 'Dreamy Kalimba',
+      description: 'Tines métalliques douces pincées sur caisse boisée. Procure un sentiment d\'ancrage d\'enfance sécurisant.',
+      isIdeal: true,
+    },
+  ];
+
+  return (
+    <div id="sound-picker-card" className="bg-white/40 dark:bg-white/5 backdrop-blur-md rounded-3xl border border-slate-200/40 dark:border-white/10 p-5 shadow-xl transition-all duration-300 w-full animate-fadeIn">
+      <button
+        onClick={() => setIsSoundPickerExpanded(!isSoundPickerExpanded)}
+        className="w-full flex items-center justify-between cursor-pointer focus:outline-none"
+      >
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-500">
+            <Music className="w-4 h-4" />
+          </div>
+          <h3 className="font-display font-semibold text-sm text-slate-800 dark:text-slate-100 uppercase tracking-wider text-left">
+            Choix du Signal Sonore
+          </h3>
+        </div>
+        <div className="text-slate-400 dark:text-slate-500">
+          {isSoundPickerExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+        </div>
+      </button>
+
+      {isSoundPickerExpanded && (
+        <div className="mt-4 flex flex-col gap-2.5">
+          {soundOptions.map((opt) => {
+            const isSelected = activeSound === opt.id;
+            return (
+              <button
+                key={opt.id}
+                id={`sound-opt-${opt.id}`}
+                onClick={() => onChangeSound(opt.id)}
+                className={`w-full text-left p-3.5 rounded-2xl border transition-all duration-200 group flex items-start justify-between cursor-pointer ${
+                  isSelected
+                    ? 'bg-indigo-500/15 border-indigo-500/40 dark:bg-indigo-500/10 shadow-md'
+                    : 'bg-white/60 hover:bg-slate-100/80 dark:bg-white/5 dark:hover:bg-white/10 border-slate-200/60 dark:border-white/5'
+                }`}
+              >
+                <div className="flex-grow pr-4">
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
+                    <span className={`text-xs font-semibold tracking-wide ${
+                      isSelected ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'text-slate-700 dark:text-slate-200'
                     }`}>
-                      {isSelected && (
-                        <svg className="w-2.5 h-2.5 fill-none stroke-current stroke-3" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                        </svg>
-                      )}
-                    </div>
+                      {opt.name}
+                    </span>
+                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">
+                      ({opt.englishName})
+                    </span>
+                    {opt.isIdeal && (
+                      <span className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/15">
+                        <Sparkles className="w-2.5 h-2.5" /> Idéal
+                      </span>
+                    )}
                   </div>
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </div>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
+                    {opt.description}
+                  </p>
+                </div>
 
+                {/* Checklist Indicator */}
+                <div className="shrink-0 pt-0.5">
+                  <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
+                    isSelected
+                      ? 'border-indigo-500 bg-indigo-500 text-white'
+                      : 'border-slate-300 dark:border-slate-700 group-hover:border-slate-400'
+                  }`}>
+                    {isSelected && (
+                      <svg className="w-2.5 h-2.5 fill-none stroke-current stroke-3" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                      </svg>
+                    )}
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
