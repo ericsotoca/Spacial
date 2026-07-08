@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SoundType, TrajectoryType, SoundOption, TrajectoryOption } from '../types';
-import { Play, Square, Volume2, Music, Shuffle, Orbit, Sparkles } from 'lucide-react';
+import { Play, Square, Volume2, Music, Shuffle, Orbit, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface AudioControlsProps {
   volume: number;
@@ -31,6 +31,7 @@ export const AudioControls: React.FC<AudioControlsProps> = ({
   orbitSpeed,
   onChangeOrbitSpeed,
 }) => {
+  const [isSoundPickerExpanded, setIsSoundPickerExpanded] = useState(true);
   const soundOptions: SoundOption[] = [
     {
       id: 'organic_rain',
@@ -140,126 +141,6 @@ export const AudioControls: React.FC<AudioControlsProps> = ({
   return (
     <div className="flex flex-col gap-6">
       
-      {/* Playback Controller Card */}
-      <div id="playback-card" className="bg-white/40 dark:bg-white/5 backdrop-blur-md rounded-3xl border border-slate-200/40 dark:border-white/10 p-5 shadow-xl transition-all duration-300">
-        <h3 className="font-display font-semibold text-xs text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">
-          Contrôleur de Lecture
-        </h3>
-        
-        <div className="flex flex-col sm:flex-row items-center gap-5">
-          {/* Main Play/Stop Button */}
-          <button
-            id="play-toggle-btn"
-            onClick={onTogglePlay}
-            className={`w-full sm:w-auto flex-grow flex items-center justify-center gap-2.5 py-3.5 px-6 rounded-2xl font-display font-bold text-sm tracking-wide shadow-md hover:shadow-lg transform active:scale-[0.98] transition-all duration-200 cursor-pointer ${
-              isPlaying
-                ? 'bg-rose-500 hover:bg-rose-600 text-white shadow-rose-500/10'
-                : 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-emerald-500/10'
-            }`}
-          >
-            {isPlaying ? (
-              <>
-                <Square className="w-4 h-4 fill-white stroke-none" />
-                <span>ARRÊTER LE SON</span>
-              </>
-            ) : (
-              <>
-                <Play className="w-4 h-4 fill-white stroke-none" />
-                <span>DÉMARRER LE SON</span>
-              </>
-            )}
-          </button>
-
-          {/* Master Volume Controls */}
-          <div className="w-full sm:w-64 flex items-center gap-3.5 bg-slate-200/40 dark:bg-black/35 px-4 py-2.5 rounded-2xl border border-slate-200/50 dark:border-white/5">
-            <Volume2 className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" />
-            <div className="flex-grow flex flex-col gap-1">
-              <div className="flex justify-between items-center text-[10px] text-slate-400 dark:text-slate-500 font-mono">
-                <span>VOL</span>
-                <span className="font-semibold">{Math.round(volume * 100)}%</span>
-              </div>
-              <input
-                id="volume-slider"
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                value={volume}
-                onChange={(e) => onChangeVolume(parseFloat(e.target.value))}
-                className="w-full h-1.5 bg-slate-200 dark:bg-white/10 rounded-lg appearance-none cursor-pointer accent-emerald-500"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Sound Signal Picker Card */}
-      <div id="sound-picker-card" className="bg-white/40 dark:bg-white/5 backdrop-blur-md rounded-3xl border border-slate-200/40 dark:border-white/10 p-5 shadow-xl transition-all duration-300">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-500">
-            <Music className="w-4 h-4" />
-          </div>
-          <h3 className="font-display font-semibold text-sm text-slate-800 dark:text-slate-100 uppercase tracking-wider">
-            1. Choix du Signal Sonore
-          </h3>
-        </div>
-
-        {/* List of custom options */}
-        <div className="flex flex-col gap-2.5">
-          {soundOptions.map((opt) => {
-            const isSelected = activeSound === opt.id;
-            return (
-              <button
-                key={opt.id}
-                id={`sound-opt-${opt.id}`}
-                onClick={() => onChangeSound(opt.id)}
-                className={`w-full text-left p-3.5 rounded-2xl border transition-all duration-200 group flex items-start justify-between cursor-pointer ${
-                  isSelected
-                    ? 'bg-indigo-500/15 border-indigo-500/40 dark:bg-indigo-500/10 shadow-md'
-                    : 'bg-white/60 hover:bg-slate-100/80 dark:bg-white/5 dark:hover:bg-white/10 border-slate-200/60 dark:border-white/5'
-                }`}
-              >
-                <div className="flex-grow pr-4">
-                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <span className={`text-xs font-semibold tracking-wide ${
-                      isSelected ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'text-slate-700 dark:text-slate-200'
-                    }`}>
-                      {opt.name}
-                    </span>
-                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">
-                      ({opt.englishName})
-                    </span>
-                    {opt.isIdeal && (
-                      <span className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/15">
-                        <Sparkles className="w-2.5 h-2.5" /> Idéal
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
-                    {opt.description}
-                  </p>
-                </div>
-
-                {/* Checklist Indicator */}
-                <div className="shrink-0 pt-0.5">
-                  <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
-                    isSelected
-                      ? 'border-indigo-500 bg-indigo-500 text-white'
-                      : 'border-slate-300 dark:border-slate-700 group-hover:border-slate-400'
-                  }`}>
-                    {isSelected && (
-                      <svg className="w-2.5 h-2.5 fill-none stroke-current stroke-3" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                      </svg>
-                    )}
-                  </div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
       {/* Autopilot/Orbite automatic Card */}
       <div id="autopilot-card" className="bg-white/40 dark:bg-white/5 backdrop-blur-md rounded-3xl border border-slate-200/40 dark:border-white/10 p-5 shadow-xl transition-all duration-300">
         
@@ -270,7 +151,7 @@ export const AudioControls: React.FC<AudioControlsProps> = ({
               <Orbit className="w-4 h-4" />
             </div>
             <h3 className="font-display font-semibold text-sm text-slate-800 dark:text-slate-100 uppercase tracking-wider">
-              2. Orbite Automatique (Autopilote)
+              1. Orbite Automatique (Autopilote)
             </h3>
           </div>
 
@@ -344,6 +225,135 @@ export const AudioControls: React.FC<AudioControlsProps> = ({
           </div>
 
         </div>
+      </div>
+
+      {/* Playback Controller Card */}
+      <div id="playback-card" className="bg-white/40 dark:bg-white/5 backdrop-blur-md rounded-3xl border border-slate-200/40 dark:border-white/10 p-5 shadow-xl transition-all duration-300">
+        <h3 className="font-display font-semibold text-xs text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">
+          Contrôleur de Lecture
+        </h3>
+        
+        <div className="flex flex-col sm:flex-row items-center gap-5">
+          {/* Main Play/Stop Button */}
+          <button
+            id="play-toggle-btn"
+            onClick={onTogglePlay}
+            className={`w-full sm:w-auto flex-grow flex items-center justify-center gap-2.5 py-3.5 px-6 rounded-2xl font-display font-bold text-sm tracking-wide shadow-md hover:shadow-lg transform active:scale-[0.98] transition-all duration-200 cursor-pointer ${
+              isPlaying
+                ? 'bg-rose-500 hover:bg-rose-600 text-white shadow-rose-500/10'
+                : 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-emerald-500/10'
+            }`}
+          >
+            {isPlaying ? (
+              <>
+                <Square className="w-4 h-4 fill-white stroke-none" />
+                <span>ARRÊTER LE SON</span>
+              </>
+            ) : (
+              <>
+                <Play className="w-4 h-4 fill-white stroke-none" />
+                <span>DÉMARRER LE SON</span>
+              </>
+            )}
+          </button>
+
+          {/* Master Volume Controls */}
+          <div className="w-full sm:w-64 flex items-center gap-3.5 bg-slate-200/40 dark:bg-black/35 px-4 py-2.5 rounded-2xl border border-slate-200/50 dark:border-white/5">
+            <Volume2 className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" />
+            <div className="flex-grow flex flex-col gap-1">
+              <div className="flex justify-between items-center text-[10px] text-slate-400 dark:text-slate-500 font-mono">
+                <span>VOL</span>
+                <span className="font-semibold">{Math.round(volume * 100)}%</span>
+              </div>
+              <input
+                id="volume-slider"
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={volume}
+                onChange={(e) => onChangeVolume(parseFloat(e.target.value))}
+                className="w-full h-1.5 bg-slate-200 dark:bg-white/10 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Sound Signal Picker Card */}
+      <div id="sound-picker-card" className="bg-white/40 dark:bg-white/5 backdrop-blur-md rounded-3xl border border-slate-200/40 dark:border-white/10 p-5 shadow-xl transition-all duration-300">
+        <button
+          onClick={() => setIsSoundPickerExpanded(!isSoundPickerExpanded)}
+          className="w-full flex items-center justify-between cursor-pointer focus:outline-none"
+        >
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-500">
+              <Music className="w-4 h-4" />
+            </div>
+            <h3 className="font-display font-semibold text-sm text-slate-800 dark:text-slate-100 uppercase tracking-wider text-left">
+              2. Choix du Signal Sonore
+            </h3>
+          </div>
+          <div className="text-slate-400 dark:text-slate-500">
+            {isSoundPickerExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+          </div>
+        </button>
+
+        {isSoundPickerExpanded && (
+          <div className="mt-4 flex flex-col gap-2.5 animate-fadeIn">
+            {soundOptions.map((opt) => {
+              const isSelected = activeSound === opt.id;
+              return (
+                <button
+                  key={opt.id}
+                  id={`sound-opt-${opt.id}`}
+                  onClick={() => onChangeSound(opt.id)}
+                  className={`w-full text-left p-3.5 rounded-2xl border transition-all duration-200 group flex items-start justify-between cursor-pointer ${
+                    isSelected
+                      ? 'bg-indigo-500/15 border-indigo-500/40 dark:bg-indigo-500/10 shadow-md'
+                      : 'bg-white/60 hover:bg-slate-100/80 dark:bg-white/5 dark:hover:bg-white/10 border-slate-200/60 dark:border-white/5'
+                  }`}
+                >
+                  <div className="flex-grow pr-4">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <span className={`text-xs font-semibold tracking-wide ${
+                        isSelected ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'text-slate-700 dark:text-slate-200'
+                      }`}>
+                        {opt.name}
+                      </span>
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">
+                        ({opt.englishName})
+                      </span>
+                      {opt.isIdeal && (
+                        <span className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/15">
+                          <Sparkles className="w-2.5 h-2.5" /> Idéal
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
+                      {opt.description}
+                    </p>
+                  </div>
+
+                  {/* Checklist Indicator */}
+                  <div className="shrink-0 pt-0.5">
+                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
+                      isSelected
+                        ? 'border-indigo-500 bg-indigo-500 text-white'
+                        : 'border-slate-300 dark:border-slate-700 group-hover:border-slate-400'
+                    }`}>
+                      {isSelected && (
+                        <svg className="w-2.5 h-2.5 fill-none stroke-current stroke-3" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                        </svg>
+                      )}
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
 
     </div>
