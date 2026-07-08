@@ -40,20 +40,6 @@ export const AudioControls: React.FC<AudioControlsProps> = ({
       isIdeal: true,
     },
     {
-      id: 'synth_arpeggio',
-      name: 'Clics Thérapeutiques EMDR',
-      englishName: 'Standard EMDR Clicks',
-      description: 'Pulsations douces de percussions courtes et précises alternant rythmiquement pour une attention ciblée et une désensibilisation efficace.',
-      isIdeal: true,
-    },
-    {
-      id: 'sea_waves',
-      name: 'Ressac d\'Océan Relaxant (SBA)',
-      englishName: 'Therapeutic Ocean Swell',
-      description: 'Le va-et-vient d\'un ressac marin modulant en vagues douces. Extrêmement rassurant et propice au lâcher-prise émotionnel.',
-      isIdeal: true,
-    },
-    {
       id: 'forest_birds',
       name: 'Forêt & Carillons',
       englishName: 'Mindful Chimes & Birds',
@@ -116,24 +102,6 @@ export const AudioControls: React.FC<AudioControlsProps> = ({
       description: 'Tines métalliques douces pincées sur caisse boisée. Procure un sentiment d\'ancrage d\'enfance sécurisant.',
       isIdeal: true,
     },
-    {
-      id: 'pink_noise',
-      name: 'Bruit Rose Thérapeutique',
-      englishName: 'Therapeutic Pink Noise',
-      description: 'Spectre sonore équilibré, doux pour le système nerveux auditif, idéal pour un balayage bilatéral continu et prolongé sans fatigue cognitive.',
-    },
-    {
-      id: 'white_noise',
-      name: 'Bruit Blanc de Concentration',
-      englishName: 'Concentration White Noise',
-      description: 'Couverture fréquentielle complète, parfaite pour isoler le patient des bruits parasites de son environnement à distance.',
-    },
-    {
-      id: 'sine_wave',
-      name: 'Onde Pure Douce (220 Hz)',
-      englishName: 'Pure Sine Pulse',
-      description: 'Fréquence pure et grave, extrêmement neutre et non-intrusive pour la stimulation bilatérale rythmique des hémisphères.',
-    },
   ];
 
   const trajectoryOptions: TrajectoryOption[] = [
@@ -150,7 +118,7 @@ export const AudioControls: React.FC<AudioControlsProps> = ({
     {
       id: 'up_down',
       name: 'Haut-Bas',
-      description: 'Oscillation verticale pure pour tester les filtres d\'élévation.',
+      description: 'Oscillation verticale ample pour tester la perception d\'élévation 3D.',
     },
     {
       id: 'left_right',
@@ -159,8 +127,13 @@ export const AudioControls: React.FC<AudioControlsProps> = ({
     },
     {
       id: 'teleport_left_right',
-      name: 'Saut Alterné',
-      description: 'Le son bascule instantanément d\'un côté à l\'autre sans transition.',
+      name: 'Saut G-D',
+      description: 'Bascule instantanément de gauche à droite sans passer par le centre.',
+    },
+    {
+      id: 'teleport_up_down',
+      name: 'Saut H-B',
+      description: 'Bascule instantanément de haut en bas sans passer par le centre.',
     },
   ];
 

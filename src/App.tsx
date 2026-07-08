@@ -172,6 +172,14 @@ export default function App() {
             nextX = Math.sin(thetaRef.current) >= 0 ? 4.9 : -4.9;
             nextZ = 0; // Centered
             break;
+
+          case 'teleport_up_down':
+            // Instantaneous jump from top/front to bottom/back without passing through the center
+            const isUp = Math.sin(thetaRef.current) >= 0;
+            nextX = 0;
+            nextY = isUp ? 4.9 : -4.9;
+            nextZ = isUp ? 4.9 : -4.9;
+            break;
         }
 
         return {
@@ -257,7 +265,18 @@ export default function App() {
       <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
-          {/* Left Column: Audio Playback, Wave Signal, Autopilot */}
+          {/* Left Column: Sonar view */}
+          <div className="lg:col-span-7 flex flex-col gap-6">
+            <AcousticScene
+              position={position}
+              onChangePosition={setPosition}
+              audioEngine={audioEngine}
+              isPlaying={isPlaying}
+              isDarkMode={isDarkMode}
+            />
+          </div>
+
+          {/* Right Column: Audio Playback, Wave Signal, Autopilot */}
           <div className="lg:col-span-5">
             <AudioControls
               volume={volume}
@@ -272,17 +291,6 @@ export default function App() {
               onChangeTrajectory={setActiveTrajectory}
               orbitSpeed={orbitSpeed}
               onChangeOrbitSpeed={setOrbitSpeed}
-            />
-          </div>
-
-          {/* Right Column: Sonar view */}
-          <div className="lg:col-span-7 flex flex-col gap-6">
-            <AcousticScene
-              position={position}
-              onChangePosition={setPosition}
-              audioEngine={audioEngine}
-              isPlaying={isPlaying}
-              isDarkMode={isDarkMode}
             />
           </div>
 

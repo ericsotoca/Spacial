@@ -166,7 +166,7 @@ export class AudioEngine {
     this.stop();
     this.activeSoundType = type;
 
-    if (type === 'white_noise' || type === 'pink_noise' || type === 'organic_rain') {
+    if (type === 'organic_rain') {
       const buffer = this.buffers[type];
       if (buffer) {
         const source = this.ctx.createBufferSource();
@@ -176,55 +176,6 @@ export class AudioEngine {
         source.start(0);
         this.activeSource = source;
       }
-    } else if (type === 'sine_wave') {
-      const osc = this.ctx.createOscillator();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(220, this.ctx.currentTime); // 220 Hz soft pure tone for relaxation
-      osc.connect(this.panner);
-      osc.start(0);
-      this.activeSource = osc;
-    } else if (type === 'synth_arpeggio') {
-      this.startArpeggiator();
-    } else if (type === 'sea_waves') {
-      // Synthesize rolling ocean waves using low-pass filtered pink noise modulated by a very slow LFO
-      const noiseSource = this.ctx.createBufferSource();
-      noiseSource.buffer = this.buffers['pink_noise'] || this.buffers['white_noise'];
-      noiseSource.loop = true;
-
-      const filter = this.ctx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(320, this.ctx.currentTime);
-
-      const waveGain = this.ctx.createGain();
-      waveGain.gain.setValueAtTime(0.2, this.ctx.currentTime);
-
-      noiseSource.connect(filter);
-      filter.connect(waveGain);
-      waveGain.connect(this.panner);
-
-      // Create a slow LFO to simulate waves coming in and out (approx 8 seconds period)
-      const lfo = this.ctx.createOscillator();
-      lfo.frequency.setValueAtTime(0.12, this.ctx.currentTime);
-
-      const lfoGainFilter = this.ctx.createGain();
-      lfoGainFilter.gain.setValueAtTime(220, this.ctx.currentTime); // Modulate frequency by +/- 220Hz
-
-      const lfoGainVolume = this.ctx.createGain();
-      lfoGainVolume.gain.setValueAtTime(0.12, this.ctx.currentTime); // Modulate volume
-
-      lfo.connect(lfoGainFilter);
-      lfoGainFilter.connect(filter.frequency);
-
-      lfo.connect(lfoGainVolume);
-      lfoGainVolume.connect(waveGain.gain);
-
-      noiseSource.start(0);
-      lfo.start(0);
-
-      this.activeSource = noiseSource;
-      // Track secondary active nodes for cleanup
-      this.synthNodes.push({ oscs: [lfo], gain: waveGain });
-
     } else if (type === 'forest_birds') {
       // Gentle wind chimes and warm bird sweeps
       const scheduler = () => {
