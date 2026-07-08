@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { SoundPosition, EarLevels } from '../types';
 import { AudioEngine } from '../audioEngine';
-import { Move, Compass, Volume2, Maximize2 } from 'lucide-react';
+import { Move, Compass } from 'lucide-react';
 
 interface AcousticSceneProps {
   position: SoundPosition;
@@ -22,21 +22,6 @@ export const AcousticScene: React.FC<AcousticSceneProps> = ({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const isDraggingRef = useRef<boolean>(false);
   const [dimensions, setDimensions] = useState({ width: 380, height: 380 });
-  const [angleAndDistance, setAngleAndDistance] = useState({ azimuth: 0, distance: 0 });
-
-  // Update azimuth and distance display whenever position changes
-  useEffect(() => {
-    const dist = Math.sqrt(position.x * position.x + position.z * position.z);
-    // Azimuth in degrees: 0° is top (front), 90° right, 180° back, -90° left
-    // Math.atan2(x, z) gives angle from Z-axis (front)
-    let az = Math.atan2(position.x, position.z) * (180 / Math.PI);
-    if (az < 0) az += 360; // Normalize to [0, 360]
-    // Translate so 0 is Front, 90 is Right, 180 is Back, 270 is Left
-    setAngleAndDistance({
-      azimuth: Math.round(az),
-      distance: parseFloat(dist.toFixed(1)),
-    });
-  }, [position]);
 
   // Handle Resize of canvas container
   useEffect(() => {
@@ -410,15 +395,6 @@ export const AcousticScene: React.FC<AcousticSceneProps> = ({
             Scène Acoustique 2D
           </h2>
         </div>
-        
-        {/* Real-time coordinates reading badges */}
-        <div className="flex items-center gap-1 font-mono text-xs text-sky-600 dark:text-sky-400 bg-sky-500/10 dark:bg-sky-500/15 px-2.5 py-1 rounded-full border border-sky-500/20">
-          <span className="font-medium">X:</span>
-          <span className="w-8 text-right font-semibold">{position.x.toFixed(2)}</span>
-          <span className="opacity-40">|</span>
-          <span className="font-medium">Z:</span>
-          <span className="w-8 text-right font-semibold">{position.z.toFixed(2)}</span>
-        </div>
       </div>
 
       {/* Radar Canvas Container */}
@@ -447,17 +423,6 @@ export const AcousticScene: React.FC<AcousticSceneProps> = ({
         </div>
       </div>
 
-      {/* Calibration metrics */}
-      <div className="grid grid-cols-2 gap-3 mt-4 text-[11px] font-mono border-t border-slate-200/30 dark:border-white/10 pt-3 text-slate-500 dark:text-slate-400">
-        <div className="flex flex-col items-center justify-center px-2.5 py-1.5 rounded-lg bg-slate-200/20 dark:bg-white/5 border border-slate-200/30 dark:border-white/5 text-center">
-          <span>Angle d'Azimut</span>
-          <span className="font-semibold text-slate-700 dark:text-slate-300 mt-0.5">{angleAndDistance.azimuth}°</span>
-        </div>
-        <div className="flex flex-col items-center justify-center px-2.5 py-1.5 rounded-lg bg-slate-200/20 dark:bg-white/5 border border-slate-200/30 dark:border-white/5 text-center">
-          <span>Distance Source</span>
-          <span className="font-semibold text-slate-700 dark:text-slate-300 mt-0.5">{angleAndDistance.distance} m</span>
-        </div>
-      </div>
     </div>
   );
 };
