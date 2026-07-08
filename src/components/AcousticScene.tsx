@@ -449,13 +449,13 @@ export const AcousticScene: React.FC<AcousticSceneProps> = ({
 
       {/* Calibration metrics */}
       <div className="grid grid-cols-2 gap-3 mt-4 text-[11px] font-mono border-t border-slate-200/30 dark:border-white/10 pt-3 text-slate-500 dark:text-slate-400">
-        <div className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-slate-200/20 dark:bg-white/5 border border-slate-200/30 dark:border-white/5">
-          <span>Angle d'Azimut :</span>
-          <span className="font-semibold text-slate-700 dark:text-slate-300">{angleAndDistance.azimuth}°</span>
+        <div className="flex flex-col items-center justify-center px-2.5 py-1.5 rounded-lg bg-slate-200/20 dark:bg-white/5 border border-slate-200/30 dark:border-white/5 text-center">
+          <span>Angle d'Azimut</span>
+          <span className="font-semibold text-slate-700 dark:text-slate-300 mt-0.5">{angleAndDistance.azimuth}°</span>
         </div>
-        <div className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-slate-200/20 dark:bg-white/5 border border-slate-200/30 dark:border-white/5">
-          <span>Distance Source :</span>
-          <span className="font-semibold text-slate-700 dark:text-slate-300">{angleAndDistance.distance} m</span>
+        <div className="flex flex-col items-center justify-center px-2.5 py-1.5 rounded-lg bg-slate-200/20 dark:bg-white/5 border border-slate-200/30 dark:border-white/5 text-center">
+          <span>Distance Source</span>
+          <span className="font-semibold text-slate-700 dark:text-slate-300 mt-0.5">{angleAndDistance.distance} m</span>
         </div>
       </div>
     </div>
