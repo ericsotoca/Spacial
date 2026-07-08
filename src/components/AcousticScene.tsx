@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { SoundPosition, EarLevels } from '../types';
 import { AudioEngine } from '../audioEngine';
-import { Move, Compass } from 'lucide-react';
+import { Compass } from 'lucide-react';
 
 interface AcousticSceneProps {
   position: SoundPosition;
@@ -20,7 +20,6 @@ export const AcousticScene: React.FC<AcousticSceneProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const isDraggingRef = useRef<boolean>(false);
   const [dimensions, setDimensions] = useState({ width: 380, height: 380 });
 
   // Handle Resize of canvas container
@@ -324,66 +323,6 @@ export const AcousticScene: React.FC<AcousticSceneProps> = ({
     };
   }, [dimensions, position, isPlaying, isDarkMode, audioEngine]);
 
-  // Handle Dragging
-  const handlePointerDown = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    isDraggingRef.current = true;
-    updatePositionFromPointer(e);
-  };
-
-  const handlePointerMove = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    if (!isDraggingRef.current) return;
-    updatePositionFromPointer(e);
-  };
-
-  const handlePointerUp = () => {
-    isDraggingRef.current = false;
-  };
-
-  const updatePositionFromPointer = (
-    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
-  ) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const rect = canvas.getBoundingClientRect();
-    let clientX = 0;
-    let clientY = 0;
-
-    if ('touches' in e) {
-      if (e.touches.length === 0) return;
-      clientX = e.touches[0].clientX;
-      clientY = e.touches[0].clientY;
-    } else {
-      clientX = e.clientX;
-      clientY = e.clientY;
-    }
-
-    const mouseX = clientX - rect.left;
-    const mouseY = clientY - rect.top;
-
-    const centerX = dimensions.width / 2;
-    const centerY = dimensions.height / 2;
-
-    const margin = 20;
-    const usableHalfW = dimensions.width / 2 - margin;
-    const usableHalfH = dimensions.height / 2 - margin;
-
-    // Convert mouse coordinates back to [-5, 5] space
-    let rx = ((mouseX - centerX) / usableHalfW) * 5;
-    // +Z is top of canvas, so mouseY < centerY implies positive coordinate value
-    let rz = ((centerY - mouseY) / usableHalfH) * 5;
-
-    // Clamp values
-    rx = Math.max(-5, Math.min(5, rx));
-    rz = Math.max(-5, Math.min(5, rz));
-
-    onChangePosition({
-      x: rx,
-      y: position.y, // Maintain current elevation
-      z: rz,
-    });
-  };
-
   return (
     <div id="acoustic-scene-card" className="flex flex-col bg-white/40 dark:bg-white/5 backdrop-blur-md rounded-3xl border border-slate-200/40 dark:border-white/10 p-5 shadow-xl transition-all duration-300">
       <div className="flex items-center justify-between mb-4">
@@ -407,20 +346,8 @@ export const AcousticScene: React.FC<AcousticSceneProps> = ({
           ref={canvasRef}
           width={dimensions.width}
           height={dimensions.height}
-          onMouseDown={handlePointerDown}
-          onMouseMove={handlePointerMove}
-          onMouseUp={handlePointerUp}
-          onMouseLeave={handlePointerUp}
-          onTouchStart={handlePointerDown}
-          onTouchMove={handlePointerMove}
-          onTouchEnd={handlePointerUp}
-          className="rounded-2xl bg-slate-500/5 dark:bg-black/20 shadow-inner border border-slate-200/30 dark:border-white/5 cursor-crosshair active:scale-[0.99] transition-transform duration-100"
+          className="rounded-2xl bg-slate-500/5 dark:bg-black/20 shadow-inner border border-slate-200/30 dark:border-white/5 cursor-default transition-transform duration-100"
         />
-
-        {/* Drag Helper Icon Overlay (only visible in dark mode / subtle) */}
-        <div className="absolute top-4 right-4 text-slate-400 dark:text-slate-600 pointer-events-none opacity-40 flex items-center gap-1.5 text-[10px] font-mono">
-          <Move className="w-3.5 h-3.5" /> Glisser pour déplacer
-        </div>
       </div>
 
     </div>
