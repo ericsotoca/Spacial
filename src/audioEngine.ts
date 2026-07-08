@@ -179,7 +179,7 @@ export class AudioEngine {
     } else if (type === 'sine_wave') {
       const osc = this.ctx.createOscillator();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(440, this.ctx.currentTime); // 440 Hz standard pure tone
+      osc.frequency.setValueAtTime(220, this.ctx.currentTime); // 220 Hz soft pure tone for relaxation
       osc.connect(this.panner);
       osc.start(0);
       this.activeSource = osc;
@@ -190,69 +190,45 @@ export class AudioEngine {
 
   private startArpeggiator() {
     if (!this.ctx || !this.panner) return;
-    this.arpeggioIndex = 0;
-
-    const notes = [
-      261.63, // C4
-      329.63, // E4
-      392.00, // G4
-      493.88, // B4
-      523.25, // C5
-      587.33, // D5
-      659.25, // E5
-      783.99, // G5
-    ];
 
     const scheduler = () => {
       if (!this.ctx || !this.panner) return;
 
       const nextNoteTime = this.ctx.currentTime;
-      const freq = notes[this.arpeggioIndex];
+      // 320Hz is a classic gentle woodblock / click frequency
+      const freq = 320; 
 
-      // Synthesize note
       const osc1 = this.ctx.createOscillator();
-      const osc2 = this.ctx.createOscillator();
       const noteGain = this.ctx.createGain();
 
-      osc1.type = 'triangle';
-      osc2.type = 'sawtooth';
-
+      osc1.type = 'triangle'; // triangle is much warmer and gentler than sine or sawtooth
       osc1.frequency.setValueAtTime(freq, nextNoteTime);
-      // Sub-octave for nice structural warm feeling
-      osc2.frequency.setValueAtTime(freq / 2, nextNoteTime);
 
-      // Attack / Decay Pluck Envelope
+      // Woodblock-like attack and quick decay (extremely soft but precise)
       noteGain.gain.setValueAtTime(0, nextNoteTime);
-      noteGain.gain.linearRampToValueAtTime(0.18, nextNoteTime + 0.004);
-      noteGain.gain.exponentialRampToValueAtTime(0.0001, nextNoteTime + 0.28);
+      noteGain.gain.linearRampToValueAtTime(0.24, nextNoteTime + 0.002);
+      noteGain.gain.exponentialRampToValueAtTime(0.0001, nextNoteTime + 0.06); // 60ms click is crisp yet gentle
 
       osc1.connect(noteGain);
-      osc2.connect(noteGain);
       noteGain.connect(this.panner);
 
       osc1.start(nextNoteTime);
-      osc2.start(nextNoteTime);
       
-      const stopTime = nextNoteTime + 0.35;
+      const stopTime = nextNoteTime + 0.1;
       osc1.stop(stopTime);
-      osc2.stop(stopTime);
 
-      // Clean up synth notes array later
-      const noteRef = { oscs: [osc1, osc2], gain: noteGain };
+      const noteRef = { oscs: [osc1], gain: noteGain };
       this.synthNodes.push(noteRef);
       setTimeout(() => {
         this.synthNodes = this.synthNodes.filter((n) => n !== noteRef);
-      }, 500);
-
-      // Advance note
-      this.arpeggioIndex = (this.arpeggioIndex + 1) % notes.length;
+      }, 150);
     };
 
     // Run first tick immediately
     scheduler();
 
-    // Schedule subsequent ticks
-    this.arpeggioTimer = window.setInterval(scheduler, 220);
+    // Schedule subsequent ticks: 450ms is perfect therapeutic tempo for bilateral clicks
+    this.arpeggioTimer = window.setInterval(scheduler, 450);
   }
 
   public stop() {

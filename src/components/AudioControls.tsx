@@ -33,35 +33,36 @@ export const AudioControls: React.FC<AudioControlsProps> = ({
 }) => {
   const soundOptions: SoundOption[] = [
     {
-      id: 'pink_noise',
-      name: 'Bruit Rose',
-      englishName: 'Pink Noise',
-      description: 'Excellent pour la localisation 3D verticale et horizontale. Son équilibré simulant une chute d\'eau.',
+      id: 'organic_rain',
+      name: 'Averse Apaisante (SBA)',
+      englishName: 'Soothing Rain Wash',
+      description: 'Stimulation Bilatérale Alternée naturelle et relaxante. Idéal pour apaiser l\'anxiété pendant la reconsolidation de la mémoire.',
       isIdeal: true,
     },
     {
-      id: 'white_noise',
-      name: 'Bruit Blanc',
-      englishName: 'White Noise',
-      description: 'Énergie identique sur toutes les fréquences. Sifflement riche facilitant le travail de localisation spatialisé.',
-    },
-    {
       id: 'synth_arpeggio',
-      name: 'Arpèges de Synthé Rythmique',
-      englishName: 'Rhythmic Synth Plucks',
-      description: 'Notes courtes et mélodieuses. Les attaques rapides de notes sont d\'excellents indices spatiaux pour le cerveau.',
+      name: 'Clics Thérapeutiques EMDR',
+      englishName: 'Standard EMDR Clicks',
+      description: 'Pulsations douces de percussions courtes et précises alternant rythmiquement pour une attention ciblée et une désensibilisation efficace.',
+      isIdeal: true,
     },
     {
-      id: 'organic_rain',
-      name: 'Averse de Pluie Organique',
-      englishName: 'Organic Rain Wash',
-      description: 'Immersion relaxante. Simule des gouttes tombant de manière aléatoire tout autour du point choisi.',
+      id: 'pink_noise',
+      name: 'Bruit Rose Thérapeutique',
+      englishName: 'Therapeutic Pink Noise',
+      description: 'Spectre sonore équilibré, doux pour le système nerveux auditif, idéal pour un balayage bilatéral continu et prolongé sans fatigue cognitive.',
+    },
+    {
+      id: 'white_noise',
+      name: 'Bruit Blanc de Concentration',
+      englishName: 'Concentration White Noise',
+      description: 'Couverture fréquentielle complète, parfaite pour isoler le patient des bruits parasites de son environnement à distance.',
     },
     {
       id: 'sine_wave',
-      name: 'Fréquence Fixe',
-      englishName: 'Pure Sine Wave 440Hz',
-      description: 'Un ton pur. Idéal pour observer qu\'un son simple sans transitoires est très difficile à situer en hauteur !',
+      name: 'Onde Pure Douce (220 Hz)',
+      englishName: 'Pure Sine Pulse',
+      description: 'Fréquence pure et grave, extrêmement neutre et non-intrusive pour la stimulation bilatérale rythmique des hémisphères.',
     },
   ];
 

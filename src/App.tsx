@@ -209,10 +209,10 @@ export default function App() {
             </div>
             <div>
               <h1 className="font-display font-bold text-base sm:text-lg tracking-tight bg-gradient-to-r from-slate-950 via-sky-600 to-indigo-600 dark:from-white dark:via-sky-400 dark:to-indigo-300 bg-clip-text text-transparent">
-                Spatial Audio Compass
+                Spatial Audio EMDR
               </h1>
               <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium tracking-wide">
-                Simulateur Binaural 3D • HRTF de Haute Fidélité
+                Simulateur de Stimulation Bilatérale Alternée (SBA) 3D
               </p>
             </div>
           </div>
@@ -309,31 +309,31 @@ export default function App() {
             className="bg-white/90 dark:bg-[#0d0f19]/90 backdrop-blur-2xl rounded-3xl border border-slate-200/60 dark:border-white/10 p-6 max-w-lg w-full shadow-[0_0_50px_rgba(0,0,0,0.5)] relative animate-in fade-in zoom-in-95 duration-200 text-slate-800 dark:text-slate-100"
           >
             <h3 className="font-display font-bold text-lg mb-3 flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
-              <Headphones className="w-5 h-5" /> Spatial Audio Compass : Mode d'Emploi
+              <Headphones className="w-5 h-5" /> Stimulation Bilatérale Alternée (EMDR)
             </h3>
             
             <div className="space-y-3.5 text-xs sm:text-sm leading-relaxed text-slate-600 dark:text-slate-300">
               <p>
-                Bienvenue dans le <strong>Spatial Audio Compass</strong> ! Cette application simule des flux sonores tridimensionnels réalistes grâce à la technologie de panoramique <strong>HRTF (Head-Related Transfer Function)</strong> intégrée dans l'API Web Audio moderne de votre navigateur.
+                Cette application est spécialement conçue pour générer des flux de <strong>Stimulation Bilatérale Alternée (SBA)</strong> de haute précision pour la thérapie <strong>EMDR à distance</strong>. Grâce à la technologie <strong>HRTF</strong>, elle simule une spatialisation acoustique 3D réaliste.
               </p>
               
               <div className="p-3 bg-indigo-500/10 dark:bg-indigo-500/5 rounded-xl border border-indigo-500/20 text-xs">
-                <span className="font-bold text-indigo-600 dark:text-indigo-400 block mb-1">🎧 IMPORTANT : UTILISEZ DES ÉCOUTEURS</span>
-                Pour percevoir l'illusion de spatialisation 3D (gauche, droite, devant, derrière, haut, bas), vous devez impérativement porter des <strong>écouteurs stéréo</strong> ou un <strong>casque audio</strong> !
+                <span className="font-bold text-indigo-600 dark:text-indigo-400 block mb-1">🎧 RECOMMANDATION PATIENT : CASQUE OU ÉCOUTEURS</span>
+                Pour que la stimulation bilatérale alternée soit thérapeutique et efficace, le patient doit impérativement porter un <strong>casque audio stéréo</strong> ou des <strong>écouteurs</strong> fonctionnels.
               </div>
 
               <div>
-                <span className="font-semibold text-slate-800 dark:text-slate-200 block mb-1">🕹️ Comment piloter la source sonore :</span>
+                <span className="font-semibold text-slate-800 dark:text-slate-200 block mb-1">🕹️ Guidage de la source sonore :</span>
                 <ul className="list-disc list-inside space-y-1 pl-1 text-xs text-slate-500 dark:text-slate-400">
-                  <li><strong>Glisser-Déposer :</strong> Cliquez ou touchez n'importe où sur l'écran radar 2D pour y téléporter ou faire glisser l'émetteur sonore.</li>
-                  <li><strong>Clavier Physique :</strong> Utilisez directement les <strong className="text-sky-600 dark:text-sky-400">flèches directionnelles (↑, ↓, ←, →)</strong> de votre clavier pour piloter le son par paliers de 0,5 mètre.</li>
+                  <li><strong>Glisser-Déposer :</strong> Cliquez ou glissez sur le radar 2D pour orienter manuellement la position du son en temps réel.</li>
+                  <li><strong>Clavier Physique :</strong> Utilisez les <strong className="text-sky-600 dark:text-sky-400">flèches directionnelles (↑, ↓, ←, →)</strong> pour déplacer la source par paliers de 0,5 mètre.</li>
                 </ul>
               </div>
 
               <div>
-                <span className="font-semibold text-slate-800 dark:text-slate-200 block mb-1">🔄 Autopilote & Signaux :</span>
+                <span className="font-semibold text-slate-800 dark:text-slate-200 block mb-1">🔄 Paramètres Thérapeutiques recommandés :</span>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Activez l'<strong>Orbite Automatique</strong> pour faire tourner le son de manière continue sur des trajectoires géométriques (Cercles complets, trajectoires en infini, ou mouvements ascendants/descendants). Choisissez le type de bruit pour tester la réponse spectrale de votre ouïe !
+                  Sélectionnez l'<strong>Averse Apaisante</strong> ou les <strong>Clics EMDR</strong> avec la trajectoire <strong>Gauche-Droite</strong> (activée par défaut) pour une stimulation bilatérale alternée optimale. Ajustez la vitesse d'orbite en fonction du rythme requis pour la désensibilisation.
                 </p>
               </div>
             </div>
@@ -343,7 +343,7 @@ export default function App() {
               onClick={() => setIsInfoOpen(false)}
               className="mt-6 w-full py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/20 text-xs font-semibold rounded-xl text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 transition-all cursor-pointer"
             >
-              J'ai compris, fermer
+              Fermer le mode d'emploi
             </button>
           </div>
         </div>
