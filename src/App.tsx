@@ -16,7 +16,7 @@ export default function App() {
   const [position, setPosition] = useState<SoundPosition>({ x: 0, y: 0, z: 0 });
   const [volume, setVolume] = useState<number>(0.6);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [activeSound, setActiveSound] = useState<SoundType>('pink_noise');
+  const [activeSound, setActiveSound] = useState<SoundType>('organic_rain');
 
   // Autopilot configurations
   const [isAutopilot, setIsAutopilot] = useState<boolean>(true);
@@ -154,16 +154,16 @@ export default function App() {
           }
 
           case 'up_down':
-            // Pure vertical oscillation on Y axis, located slightly in front
+            // Pure vertical oscillation on Y axis, centered on the listener
             nextX = 0;
-            nextZ = 3.0; // Steady distance in front
+            nextZ = 0; // Centered
             nextY = 4.8 * Math.sin(thetaRef.current);
             break;
 
           case 'left_right':
-            // Back-and-forth linear movement on X axis, positioned slightly in front
+            // Back-and-forth linear movement on X axis, centered on the listener
             nextX = R * Math.sin(thetaRef.current);
-            nextZ = 3.0; // Steady distance in front
+            nextZ = 0; // Centered
             // Height Y remains at its manual elevation value (prev.y)
             break;
         }
