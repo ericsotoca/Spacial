@@ -16,7 +16,7 @@ export default function App() {
   const [position, setPosition] = useState<SoundPosition>({ x: 0, y: 0, z: 0 });
   const [volume, setVolume] = useState<number>(0.6);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [activeSound, setActiveSound] = useState<SoundType>('organic_rain');
+  const [activeSound, setActiveSound] = useState<SoundType>('heartbeat_sba');
 
   // Autopilot configurations
   const [isAutopilot, setIsAutopilot] = useState<boolean>(true);
