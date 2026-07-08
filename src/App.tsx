@@ -166,6 +166,12 @@ export default function App() {
             nextZ = 0; // Centered
             // Height Y remains at its manual elevation value (prev.y)
             break;
+
+          case 'teleport_left_right':
+            // Instantaneous jump from one extreme to the other without passing through the center
+            nextX = Math.sin(thetaRef.current) >= 0 ? 4.9 : -4.9;
+            nextZ = 0; // Centered
+            break;
         }
 
         return {

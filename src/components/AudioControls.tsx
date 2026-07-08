@@ -157,6 +157,11 @@ export const AudioControls: React.FC<AudioControlsProps> = ({
       name: 'Gauche-Droite',
       description: 'Mouvement linéaire oscillant de gauche à droite devant vous.',
     },
+    {
+      id: 'teleport_left_right',
+      name: 'Saut Alterné',
+      description: 'Le son bascule instantanément d\'un côté à l\'autre sans transition.',
+    },
   ];
 
   return (
@@ -321,7 +326,7 @@ export const AudioControls: React.FC<AudioControlsProps> = ({
             <span className="block text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-wider font-semibold mb-2">
               Trajectoire 3D
             </span>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1 bg-slate-200/40 dark:bg-black/35 rounded-xl border border-slate-200/50 dark:border-white/5">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 p-1 bg-slate-200/40 dark:bg-black/35 rounded-xl border border-slate-200/50 dark:border-white/5">
               {trajectoryOptions.map((traj) => {
                 const isSelected = activeTrajectory === traj.id;
                 return (

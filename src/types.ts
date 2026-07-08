@@ -1,6 +1,6 @@
 export type SoundType = 'pink_noise' | 'white_noise' | 'synth_arpeggio' | 'organic_rain' | 'sine_wave' | 'sea_waves' | 'forest_birds' | 'bowl_gong' | 'heartbeat_sba' | 'binaural_beat' | 'handpan_sba' | 'hang_drum_sba' | 'tongue_drum_sba' | 'bol_tibetan_premium' | 'kalimba_sba';
 
-export type TrajectoryType = 'circle' | 'infinity' | 'up_down' | 'left_right';
+export type TrajectoryType = 'circle' | 'infinity' | 'up_down' | 'left_right' | 'teleport_left_right';
 
 export interface SoundPosition {
   x: number; // Left-Right ([-5, 5])
