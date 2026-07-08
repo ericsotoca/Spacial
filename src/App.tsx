@@ -269,7 +269,10 @@ export default function App() {
           <div className="flex flex-col gap-6">
             <AcousticScene
               position={position}
-              onChangePosition={setPosition}
+              onChangePosition={(newPos) => {
+                setPosition(newPos);
+                setIsAutopilot(false);
+              }}
               audioEngine={audioEngine}
               isPlaying={isPlaying}
               isDarkMode={isDarkMode}
@@ -284,9 +287,11 @@ export default function App() {
               isPlaying={isPlaying}
               onTogglePlay={() => setIsPlaying((prev) => !prev)}
               isAutopilot={isAutopilot}
-              onToggleAutopilot={() => setIsAutopilot((prev) => !prev)}
               activeTrajectory={activeTrajectory}
-              onChangeTrajectory={setActiveTrajectory}
+              onChangeTrajectory={(type) => {
+                setActiveTrajectory(type);
+                setIsAutopilot(true);
+              }}
               orbitSpeed={orbitSpeed}
               onChangeOrbitSpeed={setOrbitSpeed}
             />

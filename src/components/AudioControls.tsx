@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SoundType, TrajectoryType, SoundOption, TrajectoryOption } from '../types';
-import { Play, Square, Volume2, Music, Orbit, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
+import { Play, Square, Volume2, Music, Orbit, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface AudioControlsProps {
   volume: number;
@@ -8,7 +8,6 @@ interface AudioControlsProps {
   isPlaying: boolean;
   onTogglePlay: () => void;
   isAutopilot: boolean;
-  onToggleAutopilot: () => void;
   activeTrajectory: TrajectoryType;
   onChangeTrajectory: (type: TrajectoryType) => void;
   orbitSpeed: number;
@@ -21,13 +20,22 @@ export const AudioControls: React.FC<AudioControlsProps> = ({
   isPlaying,
   onTogglePlay,
   isAutopilot,
-  onToggleAutopilot,
   activeTrajectory,
   onChangeTrajectory,
   orbitSpeed,
   onChangeOrbitSpeed,
 }) => {
   const trajectoryOptions: TrajectoryOption[] = [
+    {
+      id: 'left_right',
+      name: 'Gauche-Droite',
+      description: 'Mouvement linéaire oscillant de gauche à droite devant vous.',
+    },
+    {
+      id: 'up_down',
+      name: 'Haut-Bas',
+      description: 'Oscillation verticale ample pour tester la perception d\'élévation 3D.',
+    },
     {
       id: 'circle',
       name: 'Cercle 360°',
@@ -37,16 +45,6 @@ export const AudioControls: React.FC<AudioControlsProps> = ({
       id: 'infinity',
       name: 'Infini (∞)',
       description: 'Trajectoire complexe en lemniscate (figure-8) croisant les oreilles.',
-    },
-    {
-      id: 'up_down',
-      name: 'Haut-Bas',
-      description: 'Oscillation verticale ample pour tester la perception d\'élévation 3D.',
-    },
-    {
-      id: 'left_right',
-      name: 'Gauche-Droite',
-      description: 'Mouvement linéaire oscillant de gauche à droite devant vous.',
     },
     {
       id: 'teleport_left_right',
@@ -66,7 +64,7 @@ export const AudioControls: React.FC<AudioControlsProps> = ({
       {/* Autopilot/Orbite automatic Card */}
       <div id="autopilot-card" className="bg-white/40 dark:bg-white/5 backdrop-blur-md rounded-3xl border border-slate-200/40 dark:border-white/10 p-5 shadow-xl transition-all duration-300">
         
-        {/* Header with Switcher */}
+        {/* Header (No Switcher) */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <div className="p-1.5 rounded-lg bg-sky-500/10 text-sky-500">
@@ -76,35 +74,19 @@ export const AudioControls: React.FC<AudioControlsProps> = ({
               1. Orbite Automatique (Autopilote)
             </h3>
           </div>
-
-          {/* iOS Style Toggle Switch */}
-          <button
-            id="autopilot-toggle"
-            onClick={onToggleAutopilot}
-            aria-label="Activer l'orbite automatique"
-            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-              isAutopilot ? 'bg-sky-500' : 'bg-slate-200 dark:bg-white/10'
-            }`}
-          >
-            <span
-              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                isAutopilot ? 'translate-x-5' : 'translate-x-0'
-              }`}
-            />
-          </button>
         </div>
 
-        {/* Autopilot details (fade away/disabled look if inactive) */}
-        <div className={`transition-all duration-300 ${isAutopilot ? 'opacity-100' : 'opacity-40 pointer-events-none'}`}>
+        {/* Autopilot details (Always Interactive) */}
+        <div className="transition-all duration-300 opacity-100">
           
           {/* Trajectory option pills */}
           <div className="mb-4">
             <span className="block text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-wider font-semibold mb-2">
               Trajectoire 3D
             </span>
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 p-1 bg-slate-200/40 dark:bg-black/35 rounded-xl border border-slate-200/50 dark:border-white/5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-1.5 p-1 bg-slate-200/40 dark:bg-black/35 rounded-xl border border-slate-200/50 dark:border-white/5">
               {trajectoryOptions.map((traj) => {
-                const isSelected = activeTrajectory === traj.id;
+                const isSelected = activeTrajectory === traj.id && isAutopilot;
                 return (
                   <button
                     key={traj.id}
@@ -305,7 +287,7 @@ export const SoundPickerCard: React.FC<SoundPickerCardProps> = ({
       </button>
 
       {isSoundPickerExpanded && (
-        <div className="mt-4 flex flex-col gap-2.5">
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
           {soundOptions.map((opt) => {
             const isSelected = activeSound === opt.id;
             return (
@@ -313,35 +295,22 @@ export const SoundPickerCard: React.FC<SoundPickerCardProps> = ({
                 key={opt.id}
                 id={`sound-opt-${opt.id}`}
                 onClick={() => onChangeSound(opt.id)}
-                className={`w-full text-left p-3.5 rounded-2xl border transition-all duration-200 group flex items-start justify-between cursor-pointer ${
+                className={`w-full text-left py-3 px-4 rounded-2xl border transition-all duration-200 group flex items-center justify-between cursor-pointer ${
                   isSelected
                     ? 'bg-indigo-500/15 border-indigo-500/40 dark:bg-indigo-500/10 shadow-md'
                     : 'bg-white/60 hover:bg-slate-100/80 dark:bg-white/5 dark:hover:bg-white/10 border-slate-200/60 dark:border-white/5'
                 }`}
               >
                 <div className="flex-grow pr-4">
-                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <span className={`text-xs font-semibold tracking-wide ${
-                      isSelected ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'text-slate-700 dark:text-slate-200'
-                    }`}>
-                      {opt.name}
-                    </span>
-                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">
-                      ({opt.englishName})
-                    </span>
-                    {opt.isIdeal && (
-                      <span className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/15">
-                        <Sparkles className="w-2.5 h-2.5" /> Idéal
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
-                    {opt.description}
-                  </p>
+                  <span className={`text-xs font-semibold tracking-wide ${
+                    isSelected ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'text-slate-700 dark:text-slate-200'
+                  }`}>
+                    {opt.name}
+                  </span>
                 </div>
 
                 {/* Checklist Indicator */}
-                <div className="shrink-0 pt-0.5">
+                <div className="shrink-0">
                   <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
                     isSelected
                       ? 'border-indigo-500 bg-indigo-500 text-white'
