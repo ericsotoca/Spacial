@@ -399,27 +399,6 @@ export const AcousticScene: React.FC<AcousticSceneProps> = ({
     });
   };
 
-  // Preset positioning handlers
-  const setPreset = (preset: 'gauche' | 'haut' | 'centrer' | 'bas' | 'droite') => {
-    switch (preset) {
-      case 'gauche':
-        onChangePosition({ x: -5, y: position.y, z: 0 });
-        break;
-      case 'haut':
-        onChangePosition({ x: 0, y: position.y, z: 5 });
-        break;
-      case 'centrer':
-        onChangePosition({ x: 0, y: position.y, z: 0 });
-        break;
-      case 'bas':
-        onChangePosition({ x: 0, y: position.y, z: -5 });
-        break;
-      case 'droite':
-        onChangePosition({ x: 5, y: position.y, z: 0 });
-        break;
-    }
-  };
-
   return (
     <div id="acoustic-scene-card" className="flex flex-col bg-white/40 dark:bg-white/5 backdrop-blur-md rounded-3xl border border-slate-200/40 dark:border-white/10 p-5 shadow-xl transition-all duration-300">
       <div className="flex items-center justify-between mb-4">
@@ -478,45 +457,6 @@ export const AcousticScene: React.FC<AcousticSceneProps> = ({
           <span>Distance Source :</span>
           <span className="font-semibold text-slate-700 dark:text-slate-300">{angleAndDistance.distance} m</span>
         </div>
-      </div>
-
-      {/* Quick Presets Navigation Bar */}
-      <div className="mt-4 flex flex-wrap gap-1.5 justify-between">
-        <button
-          id="preset-left"
-          onClick={() => setPreset('gauche')}
-          className="flex-1 py-1.5 px-2 bg-slate-200/40 hover:bg-slate-200/60 dark:bg-white/5 dark:hover:bg-white/10 text-[11px] font-medium text-slate-700 dark:text-slate-300 rounded-lg transition-all border border-slate-200/40 dark:border-white/5 cursor-pointer"
-        >
-          Gauche Max
-        </button>
-        <button
-          id="preset-up"
-          onClick={() => setPreset('haut')}
-          className="flex-1 py-1.5 px-2 bg-slate-200/40 hover:bg-slate-200/60 dark:bg-white/5 dark:hover:bg-white/10 text-[11px] font-medium text-slate-700 dark:text-slate-300 rounded-lg transition-all border border-slate-200/40 dark:border-white/5 cursor-pointer"
-        >
-          Haut Max
-        </button>
-        <button
-          id="preset-center"
-          onClick={() => setPreset('centrer')}
-          className="flex-1 py-1.5 px-2 bg-sky-500/10 hover:bg-sky-500/20 text-sky-600 dark:text-sky-400 text-[11px] font-semibold rounded-lg transition-all border border-sky-500/25 cursor-pointer"
-        >
-          Centrer
-        </button>
-        <button
-          id="preset-down"
-          onClick={() => setPreset('bas')}
-          className="flex-1 py-1.5 px-2 bg-slate-200/40 hover:bg-slate-200/60 dark:bg-white/5 dark:hover:bg-white/10 text-[11px] font-medium text-slate-700 dark:text-slate-300 rounded-lg transition-all border border-slate-200/40 dark:border-white/5 cursor-pointer"
-        >
-          Bas Max
-        </button>
-        <button
-          id="preset-right"
-          onClick={() => setPreset('droite')}
-          className="flex-1 py-1.5 px-2 bg-slate-200/40 hover:bg-slate-200/60 dark:bg-white/5 dark:hover:bg-white/10 text-[11px] font-medium text-slate-700 dark:text-slate-300 rounded-lg transition-all border border-slate-200/40 dark:border-white/5 cursor-pointer"
-        >
-          Droite Max
-        </button>
       </div>
     </div>
   );

@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import { SoundPosition, SoundType, TrajectoryType } from './types';
 import { AudioEngine } from './audioEngine';
 import { AcousticScene } from './components/AcousticScene';
-import { DPadAndElevation } from './components/DPadAndElevation';
 import { AudioControls } from './components/AudioControls';
 import { Sun, Moon, Info, HelpCircle, Disc, Headphones, VolumeX, Volume2, ShieldCheck } from 'lucide-react';
 
@@ -20,8 +19,8 @@ export default function App() {
   const [activeSound, setActiveSound] = useState<SoundType>('pink_noise');
 
   // Autopilot configurations
-  const [isAutopilot, setIsAutopilot] = useState<boolean>(false);
-  const [activeTrajectory, setActiveTrajectory] = useState<TrajectoryType>('circle');
+  const [isAutopilot, setIsAutopilot] = useState<boolean>(true);
+  const [activeTrajectory, setActiveTrajectory] = useState<TrajectoryType>('left_right');
   const [orbitSpeed, setOrbitSpeed] = useState<number>(1.8);
 
   // Info modal state
@@ -252,23 +251,7 @@ export default function App() {
       <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
-          {/* Left Column: Sonar view and Tactile sliders */}
-          <div className="lg:col-span-7 flex flex-col gap-6">
-            <AcousticScene
-              position={position}
-              onChangePosition={setPosition}
-              audioEngine={audioEngine}
-              isPlaying={isPlaying}
-              isDarkMode={isDarkMode}
-            />
-            
-            <DPadAndElevation
-              position={position}
-              onChangePosition={setPosition}
-            />
-          </div>
-
-          {/* Right Column: Audio Playback, Wave Signal, Autopilot */}
+          {/* Left Column: Audio Playback, Wave Signal, Autopilot */}
           <div className="lg:col-span-5">
             <AudioControls
               volume={volume}
@@ -283,6 +266,17 @@ export default function App() {
               onChangeTrajectory={setActiveTrajectory}
               orbitSpeed={orbitSpeed}
               onChangeOrbitSpeed={setOrbitSpeed}
+            />
+          </div>
+
+          {/* Right Column: Sonar view */}
+          <div className="lg:col-span-7 flex flex-col gap-6">
+            <AcousticScene
+              position={position}
+              onChangePosition={setPosition}
+              audioEngine={audioEngine}
+              isPlaying={isPlaying}
+              isDarkMode={isDarkMode}
             />
           </div>
 
@@ -332,8 +326,7 @@ export default function App() {
                 <span className="font-semibold text-slate-800 dark:text-slate-200 block mb-1">🕹️ Comment piloter la source sonore :</span>
                 <ul className="list-disc list-inside space-y-1 pl-1 text-xs text-slate-500 dark:text-slate-400">
                   <li><strong>Glisser-Déposer :</strong> Cliquez ou touchez n'importe où sur l'écran radar 2D pour y téléporter ou faire glisser l'émetteur sonore.</li>
-                  <li><strong>D-Pad / Flèches :</strong> Cliquez sur les boutons du D-Pad tactile ou utilisez directement les <strong className="text-sky-600 dark:text-sky-400">flèches directionnelles de votre clavier physique</strong> pour piloter le son par paliers de 0,5 mètre.</li>
-                  <li><strong>Élévation :</strong> Modifiez l'élévation verticale (axe Y) avec le curseur de hauteur.</li>
+                  <li><strong>Clavier Physique :</strong> Utilisez directement les <strong className="text-sky-600 dark:text-sky-400">flèches directionnelles (↑, ↓, ←, →)</strong> de votre clavier pour piloter le son par paliers de 0,5 mètre.</li>
                 </ul>
               </div>
 
