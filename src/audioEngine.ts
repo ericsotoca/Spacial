@@ -7,6 +7,9 @@ export class AudioEngine {
   private splitter: ChannelSplitterNode | null = null;
   private leftAnalyser: AnalyserNode | null = null;
   private rightAnalyser: AnalyserNode | null = null;
+  private leftSeparationGain: GainNode | null = null;
+  private rightSeparationGain: GainNode | null = null;
+  private separationMerger: ChannelMergerNode | null = null;
 
   // Active sources
   private activeSource: AudioBufferSourceNode | OscillatorNode | null = null;
@@ -44,23 +47,34 @@ export class AudioEngine {
     this.panner.maxDistance = 100;
     this.panner.rolloffFactor = 1.2;
 
-    // Connect nodes
-    // Source -> Panner -> MasterGain -> Destination
-    this.panner.connect(this.masterGain);
-    this.masterGain.connect(this.ctx.destination);
-
-    // Create splitter and analysers for visual feedback
+    // Create channel separation nodes
     this.splitter = this.ctx.createChannelSplitter(2);
+    this.leftSeparationGain = this.ctx.createGain();
+    this.rightSeparationGain = this.ctx.createGain();
+    this.separationMerger = this.ctx.createChannelMerger(2);
+
     this.leftAnalyser = this.ctx.createAnalyser();
     this.rightAnalyser = this.ctx.createAnalyser();
 
     this.leftAnalyser.fftSize = 128;
     this.rightAnalyser.fftSize = 128;
 
-    // Panner output also connects to splitter to analyze L/R spatialized signals
+    // Connect Source -> Panner -> Splitter -> (Left/Right Gain Nodes) -> Merger -> Master Gain -> Destination
     this.panner.connect(this.splitter);
-    this.splitter.connect(this.leftAnalyser, 0, 0); // L channel
-    this.splitter.connect(this.rightAnalyser, 1, 0); // R channel
+
+    // Route Left Channel (channel 0)
+    this.splitter.connect(this.leftSeparationGain, 0, 0);
+    this.leftSeparationGain.connect(this.leftAnalyser);
+    this.leftSeparationGain.connect(this.separationMerger, 0, 0);
+
+    // Route Right Channel (channel 1)
+    this.splitter.connect(this.rightSeparationGain, 1, 0);
+    this.rightSeparationGain.connect(this.rightAnalyser);
+    this.rightSeparationGain.connect(this.separationMerger, 0, 1);
+
+    // Connect merged stereo signal to Master Gain
+    this.separationMerger.connect(this.masterGain);
+    this.masterGain.connect(this.ctx.destination);
 
     // Update initial panner coordinates
     this.updatePosition(this.currentPosition);
@@ -687,6 +701,32 @@ export class AudioEngine {
     } else {
       // Legacy browsers
       this.panner.setPosition(px, py, pz);
+    }
+
+    // Dynamic Left/Right Crosstalk Separation (100% isolation at extremes)
+    // pos.x ranges from -5 (extreme left) to +5 (extreme right).
+    // We normalize to -1.0 to +1.0
+    const normX = Math.max(-1, Math.min(1, pos.x / 5));
+
+    let leftGain = 1.0;
+    let rightGain = 1.0;
+
+    if (normX < 0) {
+      // Sound is panned left.
+      // Left ear gets 100%. Right ear gets attenuated smoothly to exactly 0.0.
+      rightGain = Math.pow(Math.max(0, 1 + normX), 2.0); // power of 2.0 guarantees early and complete zero-bleeding at extreme
+      leftGain = 1.0;
+    } else {
+      // Sound is panned right.
+      // Right ear gets 100%. Left ear gets attenuated smoothly to exactly 0.0.
+      leftGain = Math.pow(Math.max(0, 1 - normX), 2.0);
+      rightGain = 1.0;
+    }
+
+    if (this.leftSeparationGain && this.rightSeparationGain) {
+      const t = this.ctx.currentTime;
+      this.leftSeparationGain.gain.linearRampToValueAtTime(leftGain, t + 0.04);
+      this.rightSeparationGain.gain.linearRampToValueAtTime(rightGain, t + 0.04);
     }
   }
 
